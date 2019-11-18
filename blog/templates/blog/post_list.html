@@ -8,5 +8,22 @@
         <p>
             This is a sample post html page.
         </p>
+        <h3>
+            Here are some posts
+        </h3>
+        <div>
+            {% for post in posts %}
+            <!-- {{ post }} -->
+            <p>
+                published: {{ post.published_date}}
+            </p>
+            <h2>
+                <a ref="">{{ post.title}} </a>
+            </h2>
+            <p>
+                {{ post.text|linebreaksbr }}
+            </p>
+            {% endfor %}
+        </div>
     </body>
 </html>
