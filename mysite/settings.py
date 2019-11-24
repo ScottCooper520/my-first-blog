@@ -121,8 +121,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-# Not using this at the moment. Am going to intially server from static.
+# Not using this at the moment. Am going to intially serve from static.
 # Where django will serve media files
-MEDIA_URL = '/media/'
+# MEDIA_URL = '/media/'
 # Where to save uploaded files
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
