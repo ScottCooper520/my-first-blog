@@ -1,3 +1,4 @@
+{% load static %}
 <html>
     <head>
         <title>
@@ -15,15 +16,27 @@
             {% for post in posts %}
             <!-- {{ post }} -->
             <p>
-                published: {{ post.published_date}}
+                published: {{ post.published_date }}
             </p>
             <h2>
-                <a ref="">{{ post.title}} </a>
+                <a ref="">{{ post.title }} </a>
             </h2>
             <p>
-                {{ post.text|linebreaksbr }}
+                {{ post.description|linebreaksbr }}
+            </p>
+            <p>
+                {{ post.picture }}
+            </p>
+            <p>
+                <img src="/static/blog/sky.jpeg">
+                <!-- <img src="/blog/static/sky.jpeg">
+                <img src="/blog/static/{{post.picture.url}}">
+                <img src="/static/{{post.picture.url}}"> -->
             </p>
             {% endfor %}
+        </div>
+        <div>
+            <img src="{% static 'blog/sky.jpeg' %}" alt="My Sky Image">
         </div>
     </body>
 </html>
