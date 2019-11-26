@@ -11,6 +11,7 @@ class Post(models.Model):
     published_date = models.DateTimeField(blank=True, null=True)
     #picture = models.ImageField(upload_to='media/')
     #picture = models.ImageField(upload_to='static/')
+    # Test using static for images.
     picture = models.ImageField()
 
     def publish(self):
