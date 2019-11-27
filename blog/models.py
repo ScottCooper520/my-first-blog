@@ -12,7 +12,7 @@ class Post(models.Model):
     #picture = models.ImageField(upload_to='media/')
     #picture = models.ImageField(upload_to='static/')
     # Test using static for images.
-    picture = models.ImageField()
+    # picture = models.ImageField()
 
     def publish(self):
         self.published_date = timezone.now()
