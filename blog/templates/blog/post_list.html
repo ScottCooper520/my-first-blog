@@ -3,7 +3,7 @@
     <head>
         <title>
             First Blog Test
-        </title> 
+        </title>
     </head>
     <body>
         <p>
@@ -14,7 +14,7 @@
         </h3>
         <div>
             {% for post in posts %}
-            <!-- {{ post }} -->
+            {{ post }}
             <p>
                 published: {{ post.published_date }}
             </p>
@@ -24,19 +24,34 @@
             <p>
                 {{ post.description|linebreaksbr }}
             </p>
-            <!-- <p>
-                {{ post.picture }}
-            </p> -->
             <p>
-                <img src="/static/blog/sky.jpeg">
-                <!-- <img src="/blog/static/sky.jpeg">
+                {{ post.picture }}
+            </p>
+            <p>
+                <!-- <img src="/static/blog/sky.jpeg"> -->
+                <!-- <img src="/blog/static/sky.jpeg"> -->
+                <!-- <img src="{{post.picture.url}}">
+                <img src="/{{post.picture.url}}">
+                <img src="{{post.picture}}">
+                <img src="/{{post.picture}}">
                 <img src="/blog/static/{{post.picture.url}}">
-                <img src="/static/{{post.picture.url}}"> -->
+                <img src="/blog/static/{{post.picture.url}}">
+                <img src="/blog/{{post.picture.url}}"> -->
+                <!-- <img src="/static/blog/static/{{post.picture.url}}"> -->
+                <img src="/static/{{post.picture.url}}">
             </p>
             {% endfor %}
         </div>
         <div>
-            <img src="{% static 'blog/sky.jpeg' %}" alt="My Sky Image">
+            <!-- OK <img src="{% static 'SVWNetColors.png' %}" alt="SVNet Image"> -->
+
+            <!-- <img src="{% static '/SVWNetColors.png' %}" alt="SVNet Image"> -->
+            <!-- <img src="{% static '/static/SVWNetColors.png' %}" alt="SVNet Image">
+            <img src="{% static 'PID_sch.PNG' %}" alt="My PID Image">
+            <img src="{% static 'CktLabColorsOnly.JPG' %}" alt="My Ckt Image">
+            <img src="{% static 'blog/static/blog.JPG' %}" alt="My Ckt Image">
+            <img src="{% static '/blog/static/blog.JPG' %}" alt="My Ckt Image">
+            <img src="{% static '/blog/static/blog.JPG' %}" alt="My Ckt Image"> -->
         </div>
     </body>
 </html>

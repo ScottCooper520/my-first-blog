@@ -10,9 +10,9 @@ class Post(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)
     #picture = models.ImageField(upload_to='media/')
-    #picture = models.ImageField(upload_to='static/')
+    #picture = models.ImageField(upload_to='static/', null=True)
     # Test using static for images.
-    # picture = models.ImageField()
+    picture = models.ImageField(null=True)
 
     def publish(self):
         self.published_date = timezone.now()
