@@ -12,9 +12,9 @@
         <h3>
             Here are some posts
         </h3>
-        <div>
+        <div id="allImages">
             {% for post in posts %}
-            {{ post }}
+            <div class="ss">
             <p>
                 published: {{ post.published_date }}
             </p>
@@ -24,34 +24,57 @@
             <p>
                 {{ post.description|linebreaksbr }}
             </p>
+
             <p>
-                {{ post.picture }}
-            </p>
-            <p>
-                <!-- <img src="/static/blog/sky.jpeg"> -->
-                <!-- <img src="/blog/static/sky.jpeg"> -->
-                <!-- <img src="{{post.picture.url}}">
-                <img src="/{{post.picture.url}}">
-                <img src="{{post.picture}}">
-                <img src="/{{post.picture}}">
-                <img src="/blog/static/{{post.picture.url}}">
-                <img src="/blog/static/{{post.picture.url}}">
-                <img src="/blog/{{post.picture.url}}"> -->
-                <!-- <img src="/static/blog/static/{{post.picture.url}}"> -->
                 <img src="/static/{{post.picture.url}}">
             </p>
+            </div>
             {% endfor %}
         </div>
-        <div>
+        <div id="output">
             <!-- OK <img src="{% static 'SVWNetColors.png' %}" alt="SVNet Image"> -->
-
-            <!-- <img src="{% static '/SVWNetColors.png' %}" alt="SVNet Image"> -->
-            <!-- <img src="{% static '/static/SVWNetColors.png' %}" alt="SVNet Image">
-            <img src="{% static 'PID_sch.PNG' %}" alt="My PID Image">
-            <img src="{% static 'CktLabColorsOnly.JPG' %}" alt="My Ckt Image">
-            <img src="{% static 'blog/static/blog.JPG' %}" alt="My Ckt Image">
-            <img src="{% static '/blog/static/blog.JPG' %}" alt="My Ckt Image">
-            <img src="{% static '/blog/static/blog.JPG' %}" alt="My Ckt Image"> -->
         </div>
     </body>
+    <script>
+        console.log("Here is some javascript...");
+
+    (function myLoop (i) {
+        let images = document.getElementsByClassName("ss");
+        document.getElementById("allImages").style.display = "none";
+        setTimeout(function () {
+        // console.log('hello');          //  your code here
+        document.getElementById("output").innerHTML = images[i-1].outerHTML;
+        unfade(document.getElementById("output"));
+        fade(document.getElementById("output"));
+
+        if (--i) myLoop(i);      //  decrement i and call myLoop again if i > 0
+        }, 5000)
+    })(3);                        //  pass the number of iterations as an argument
+
+    function fade(element) {
+    var op = 1;  // initial opacity
+    var timer = setInterval(function () {
+        if (op <= 0.1){
+            clearInterval(timer);
+            element.style.display = 'none';
+        }
+        element.style.opacity = op;
+        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op -= op * 0.1;
+    }, 50);
+    }
+
+    function unfade(element) {
+    var op = 0.1;  // initial opacity
+    element.style.display = 'block';
+    var timer = setInterval(function () {
+        if (op >= 1){
+            clearInterval(timer);
+        }
+        element.style.opacity = op;
+        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op += op * 0.1;
+    }, 10);
+    }
+    </script>
 </html>
