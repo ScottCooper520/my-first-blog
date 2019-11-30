@@ -6,18 +6,20 @@
         </title>
     </head>
     <body>
-        <p>
-            This is a sample post html page.
-        </p>
         <h3>
-            Here are some posts
+            The Coops Holiday Update
         </h3>
         <div id="allImages">
             {% for post in posts %}
             <div class="ss">
             <p>
-                published: {{ post.published_date }}
+                <!-- OK <img src="/static/{{post.picture.url}}"> -->
+                <img src="/static/{{post.picture.url}}"
+                    style="width:600px; height:500px">
             </p>
+            <!-- <p>
+                published: {{ post.published_date }}
+            </p> -->
             <h2>
                 <a ref="">{{ post.title }} </a>
             </h2>
@@ -25,9 +27,6 @@
                 {{ post.description|linebreaksbr }}
             </p>
 
-            <p>
-                <img src="/static/{{post.picture.url}}">
-            </p>
             </div>
             {% endfor %}
         </div>
@@ -37,19 +36,23 @@
     </body>
     <script>
         console.log("Here is some javascript...");
-
-    (function myLoop (i) {
-        let images = document.getElementsByClassName("ss");
         document.getElementById("allImages").style.display = "none";
-        setTimeout(function () {
-        // console.log('hello');          //  your code here
-        document.getElementById("output").innerHTML = images[i-1].outerHTML;
-        unfade(document.getElementById("output"));
-        fade(document.getElementById("output"));
+        let slides = document.getElementsByClassName("ss");
+       (function slideLoop (i) {
+            let element = document.getElementById("output");
+            element.innerHTML = slides[i-1].outerHTML;
+            // element.style.display = "block"; //"none";
+            unfade(element);
+            setTimeout(() => {
+                fade(element);
+                // element.style.display = "none";
+                setTimeout(() => {
+                    // decrement i and call myLoop again if i > 0
+                    if (--i) slideLoop(i);
+                }, 2000);
+            }, 3000);
 
-        if (--i) myLoop(i);      //  decrement i and call myLoop again if i > 0
-        }, 5000)
-    })(3);                        //  pass the number of iterations as an argument
+       })(slides.length);
 
     function fade(element) {
     var op = 1;  // initial opacity
