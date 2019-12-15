@@ -1,21 +1,35 @@
 {% load static %}
 <html>
     <head>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+            integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <title>
             First Blog Test
         </title>
+        <style>
+            #buttonId {margin-bottom: 10px;}
+        </style>
     </head>
     <body>
-        <h3>
+        <audio src="/static/LinusLucy.mp3"
+            webkit-playsinline="true"
+            allow="autoplay"
+            autoplay="true">
+        </audio>
+        <h2>
             The Coops Holiday Update
-        </h3>
+        </h2>
+        <div>
+            <!-- <button onclick="startSS()">Begin Slide Show</button> -->
+            <button id="buttonId" type="button" class="btn btn-info" onclick="startSS()">Begin Slide Show</button>
+        </div>
         <div id="allImages">
             {% for post in posts %}
             <div class="ss">
             <p>
-                <!-- OK <img src="/static/{{post.picture.url}}"> -->
                 <img src="/static/{{post.picture.url}}"
-                    style="width:600px; height:500px">
+                    style="width:900px; height:550px">
             </p>
             <!-- <p>
                 published: {{ post.published_date }}
@@ -26,7 +40,6 @@
             <p>
                 {{ post.description|linebreaksbr }}
             </p>
-
             </div>
             {% endfor %}
         </div>
@@ -35,7 +48,11 @@
         </div>
     </body>
     <script>
+        function startSS() {
+            console.log("Start SlideShow");
+
         console.log("Here is some javascript...");
+        playMusic();
         document.getElementById("allImages").style.display = "none";
         let slides = document.getElementsByClassName("ss");
        (function slideLoop (i) {
@@ -49,10 +66,15 @@
                 setTimeout(() => {
                     // decrement i and call myLoop again if i > 0
                     if (--i) slideLoop(i);
+                    else {
+                        stopMusic();
+                        console.log("Slide Show Done");
+                    }
                 }, 2000);
             }, 3000);
 
        })(slides.length);
+    }
 
     function fade(element) {
     var op = 1;  // initial opacity
@@ -78,6 +100,22 @@
         element.style.filter = 'alpha(opacity=' + op * 100 + ")";
         op += op * 0.1;
     }, 10);
+    }
+
+    function playMusic() {
+        setTimeout(() => {
+        console.log("In playMusic()");
+        var v = document.getElementsByTagName("audio")[0];
+        v.play();
+        }, 5000 );
+        // let body = document.getElementsByTagName("BODY")[0];
+        // body.prepend('<audio src="https://www.w3schools.com/tags/horse.ogg" controls></audio>');
+    }
+
+    function stopMusic() {
+        console.log("In stopMusic()");
+        var v = document.getElementsByTagName("audio")[0];
+        v.pause();
     }
     </script>
 </html>
