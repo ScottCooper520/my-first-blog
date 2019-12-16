@@ -46,6 +46,7 @@
         <div id="output">
             <!-- OK <img src="{% static 'SVWNetColors.png' %}" alt="SVNet Image"> -->
         </div>
+        <div id="allSortedImagesDiv"></div>
     </body>
     <script>
         function startSS() {
@@ -55,9 +56,40 @@
         playMusic();
         document.getElementById("allImages").style.display = "none";
         let slides = document.getElementsByClassName("ss");
+        let slidesArray = [];
+        for (var i in slides) {
+            if (slides[i].nodeType == 1) { // get rid of the whitespace text nodes
+            console.log("Slide pre sort = " + slides[i].innerHTML);
+                slidesArray.push(slides[i]);
+            }
+        }
+        //slidesArray.sort(function(a, b) {
+        //    return a.innerHTML == b.innerHTML
+        //        ? 0
+        //        : (a.innerHTML > b.innerHTML ? 1 : -1);
+        //});
+        slidesArray.sort(function(a, b) {
+            // return a.children[2].innerHTML.trim() == b.children[2].innerHTML.trim()
+            //    ? 0
+            //    : (a.children[2].innerHTML.trim() > b.children[2].innerHTML.trim() ? 1 : -1);
+            let aDesc = a.children[2].innerHTML.trim();
+            let bDesc = b.children[2].innerHTML.trim();
+            return aDesc == bDesc
+                ? 0
+                : (aDesc > bDesc ? 1 : -1);
+        });
+
+        allSortedImages = document.getElementById("allSortedImagesDiv");
+        for (i = 0; i < slidesArray.length; ++i) {
+            console.log("Slide post sort = " + slidesArray[i].innerHTML);
+            allSortedImages.appendChild(slidesArray[i]);
+            // allSortedImages.append(slidesArray[i]);
+        }
+
        (function slideLoop (i) {
             let element = document.getElementById("output");
             element.innerHTML = slides[i-1].outerHTML;
+            let desc = slides[i-1].children[2].innerHTML.trim();
             // element.style.display = "block"; //"none";
             unfade(element);
             setTimeout(() => {
@@ -106,6 +138,7 @@
         setTimeout(() => {
         console.log("In playMusic()");
         var v = document.getElementsByTagName("audio")[0];
+        v.load();
         v.play();
         }, 5000 );
         // let body = document.getElementsByTagName("BODY")[0];
