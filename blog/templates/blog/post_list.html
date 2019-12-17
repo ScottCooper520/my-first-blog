@@ -5,34 +5,37 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
             integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <title>
-            First Blog Test
+            Happy Holidays
         </title>
         <style>
-            #buttonId {margin-bottom: 10px;}
+            .btn-info {margin-bottom: 10px;}
             #allImages { display: none };
             #allSortedImagesDiv { display: none };
             #main {width:900px; height:550px;};
         </style>
     </head>
     <body>
-        <audio src="/static/LinusLucy.mp3"
-            webkit-playsinline="true"
+        <audio webkit-playsinline="true"
             allow="autoplay"
             autoplay="true">
-        </audio>
-        <!-- <audio src="/static/SiT2.mp3"
-            webkit-playsinline="true"
-            allow="autoplay"
-            autoplay="true"> -->
+            <source id="audioSource" src=""></source>
         </audio>
         <div id="main" style="width:900px; height:550px">
         <h2>
-            The Coops Holiday Update
+            The Coops Holiday Update (2017-2019)
         </h2>
         <div>
-            <button id="buttonId" type="button" class="btn btn-info"
-                onclick="startSS()">Click to Begin Slide Show</button>
-        </div>
+            <button id="buttonId1" type="button" class="btn btn-info"
+                onclick='startSS(true)'>Click for Holiday Show</button>
+            <button id="buttonId2" type="button" class="btn btn-info"
+                onclick='startSS(false)'>Click for Bonus Show</button>
+            <!-- <button id="buttonId1" type="button" class="btn btn-info"
+                onclick='startSS("/static/LinusLucy.mp3")'>Click for Holiday Show</button> -->
+            <!-- <button id="buttonId2" type="button" class="btn btn-info"
+                onclick='startSS("/static/SiT2.mp3")'>Click for Bonus Show</button> -->
+            <!-- <button id="buttonId2" type="button" class="btn btn-info"
+                onclick='startSS("/static/LinusLucy.mp3")'>Click for Bonus Show</button> -->
+
         <div id="allImages">
             <!-- Loop through Python posts and use data for HTML -->
             <!-- Note that values must be added for all fields in admin,
@@ -60,7 +63,9 @@
             {% endfor %}
         </div>
         <div id="output">
-            <img src="{% static 'snlIntro.jpg' %}"
+            <!-- <img src="{% static 'snlIntro.jpg' %}"
+                style="width:900px; height:550px" alt="SVNet Image"> -->
+            <img src="{% static 'Welcome.jpg' %}"
                 style="width:900px; height:550px" alt="SVNet Image">
         </div>
         <div id="allSortedImagesDiv"></div>
@@ -69,29 +74,43 @@
 
     <script>
     // Set position of initial slide
-        (function position (i) {
+        (function position () {
             let bw = getWidth(); // Browser width
             let main = document.getElementById("main"); // Main div
-            let sw = main.offsetWidth; // Slide width
+           let sw = main.offsetWidth; // Slide width
             let marginLeft = bw/2 - sw/2;
             main.style.marginLeft = marginLeft + "px";
         })();
 
-        function startSS() {
+        // function startSS(song) {
+        function startSS(isHoliday) {
             console.log("Start SlideShow");
 
         console.log("Here is some javascript...");
-        playMusic();
+        playMusic(isHoliday);
         document.getElementById("allImages").style.display = "none";
         let slides = document.getElementsByClassName("ss");
         let slidesArray = [];
-        // Get rid of the whitespace text nodes and no title slide
+        // Split slides for holiday/bonus
+        if (isHoliday) {
         for (var i in slides) {
-            if (slides[i].nodeType == 1 && i != 0) {
+            if (i != 0 && slides[i].children
+                &&slides[i].children[2].innerHTML.trim() < 20) {
             console.log("Slide pre sort = " + slides[i].innerHTML);
                 slidesArray.push(slides[i]);
             }
         }
+        }
+        else {
+            for (var i in slides) {
+            if (i != 0 && slides[i].children
+                &&slides[i].children[2].innerHTML.trim() > 20) {
+            console.log("Slide pre sort = " + slides[i].innerHTML);
+                slidesArray.push(slides[i]);
+            }
+        }
+        }
+
 
         // Sort by alpha on Description field (elem [2])
         slidesArray.sort(function(a, b) {
@@ -113,7 +132,7 @@
        (function slideLoop (i) {
             let element = document.getElementById("output");
             // Don't show index (description).
-            slides[i-1].children[2].style.display = "none";
+            slidesArray[i-1].children[2].style.display = "none";
             element.innerHTML = slidesArray[i-1].outerHTML;
             unfade(element);
             setTimeout(() => {
@@ -124,6 +143,12 @@
                     else {
                         stopMusic();
                         console.log("Slide Show Done");
+                        let output = document.getElementById("output");
+                        // Show title slide for bonus material.
+                        output.innerHTML = '<img src="{% static 'snlIntro.jpg' %}"' +
+                            'style="width:900px; height:550px;" alt="SVNet Image">';
+                        output.style.display = "block";
+                        output.style.opacity = "1";
                     }
                 }, 2000);
             }, 13000);
@@ -141,7 +166,7 @@
         element.style.opacity = op;
         element.style.filter = 'alpha(opacity=' + op * 100 + ")";
         op -= op * 0.1;
-    }, 50);
+    }, 50); //50);
     }
 
     function unfade(element) {
@@ -154,7 +179,7 @@
         element.style.opacity = op;
         element.style.filter = 'alpha(opacity=' + op * 100 + ")";
         op += op * 0.1;
-    }, 10);
+    }, 50); //10);
     }
 
     function getWidth() {
@@ -177,15 +202,20 @@
         );
     }
 
-    function playMusic() {
+    function playMusic(isHoliday) {
+        let source = document.getElementById("audioSource");
+        if (isHoliday) {
+            source.src = "/static/LinusLucy.mp3";
+        }
+        else {
+            // ok source.src = "/static/SiT2.mp3";
+        }
         setTimeout(() => {
         console.log("In playMusic()");
-        var v = document.getElementsByTagName("audio")[0];
+        let v = document.getElementsByTagName("audio")[0];
         v.load();
         v.play();
         }, 100 );
-        // let body = document.getElementsByTagName("BODY")[0];
-        // body.prepend('<audio src="https://www.w3schools.com/tags/horse.ogg" controls></audio>');
     }
 
     function stopMusic() {
