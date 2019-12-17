@@ -11,6 +11,7 @@
             #buttonId {margin-bottom: 10px;}
             #allImages { display: none };
             #allSortedImagesDiv { display: none };
+            #main {width:900px; height:550px;};
         </style>
     </head>
     <body>
@@ -19,6 +20,12 @@
             allow="autoplay"
             autoplay="true">
         </audio>
+        <!-- <audio src="/static/SiT2.mp3"
+            webkit-playsinline="true"
+            allow="autoplay"
+            autoplay="true"> -->
+        </audio>
+        <div id="main" style="width:900px; height:550px">
         <h2>
             The Coops Holiday Update
         </h2>
@@ -54,12 +61,22 @@
         </div>
         <div id="output">
             <img src="{% static 'snlIntro.jpg' %}"
-                alt="SVNet Image">
+                style="width:900px; height:550px" alt="SVNet Image">
         </div>
         <div id="allSortedImagesDiv"></div>
+        </div>
     </body>
 
     <script>
+    // Set position of initial slide
+        (function position (i) {
+            let bw = getWidth(); // Browser width
+            let main = document.getElementById("main"); // Main div
+            let sw = main.offsetWidth; // Slide width
+            let marginLeft = bw/2 - sw/2;
+            main.style.marginLeft = marginLeft + "px";
+        })();
+
         function startSS() {
             console.log("Start SlideShow");
 
@@ -68,9 +85,9 @@
         document.getElementById("allImages").style.display = "none";
         let slides = document.getElementsByClassName("ss");
         let slidesArray = [];
-        // Get rid of the whitespace text nodes
+        // Get rid of the whitespace text nodes and no title slide
         for (var i in slides) {
-            if (slides[i].nodeType == 1) {
+            if (slides[i].nodeType == 1 && i != 0) {
             console.log("Slide pre sort = " + slides[i].innerHTML);
                 slidesArray.push(slides[i]);
             }
@@ -109,7 +126,7 @@
                         console.log("Slide Show Done");
                     }
                 }, 2000);
-            }, 3000);
+            }, 13000);
 
        })(slidesArray.length);
     }
@@ -138,6 +155,26 @@
         element.style.filter = 'alpha(opacity=' + op * 100 + ")";
         op += op * 0.1;
     }, 10);
+    }
+
+    function getWidth() {
+        return Math.max(
+            document.body.scrollWidth,
+            document.documentElement.scrollWidth,
+            document.body.offsetWidth,
+            document.documentElement.offsetWidth,
+            document.documentElement.clientWidth
+        );
+    }
+
+    function getHeight() {
+        return Math.max(
+            document.body.scrollHeight,
+            document.documentElement.scrollHeight,
+            document.body.offsetHeight,
+            document.documentElement.offsetHeight,
+            document.documentElement.clientHeight
+        );
     }
 
     function playMusic() {
