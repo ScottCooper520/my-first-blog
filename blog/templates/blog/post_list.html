@@ -9,6 +9,8 @@
         </title>
         <style>
             #buttonId {margin-bottom: 10px;}
+            #allImages { display: none };
+            #allSortedImagesDiv { display: none };
         </style>
     </head>
     <body>
@@ -21,22 +23,29 @@
             The Coops Holiday Update
         </h2>
         <div>
-            <!-- <button onclick="startSS()">Begin Slide Show</button> -->
-            <button id="buttonId" type="button" class="btn btn-info" onclick="startSS()">Begin Slide Show</button>
+            <button id="buttonId" type="button" class="btn btn-info"
+                onclick="startSS()">Click to Begin Slide Show</button>
         </div>
         <div id="allImages">
+            <!-- Loop through Python posts and use data for HTML -->
+            <!-- Note that values must be added for all fields in admin,
+                even if not used (e.g. created/published dates). -->
             {% for post in posts %}
             <div class="ss">
             <p>
                 <img src="/static/{{post.picture.url}}"
                     style="width:900px; height:550px">
             </p>
-            <!-- <p>
+            <!-- OK <p>
                 published: {{ post.published_date }}
             </p> -->
-            <h2>
-                <a ref="">{{ post.title }} </a>
-            </h2>
+            <!-- <p>
+                created: {{ post.created_date }}
+            </p> -->
+            <h3>
+                <!-- OK <a ref="">{{ post.title }} </a> -->
+                {{ post.title }}
+            </h3>
             <p>
                 {{ post.description|linebreaksbr }}
             </p>
@@ -44,10 +53,12 @@
             {% endfor %}
         </div>
         <div id="output">
-            <!-- OK <img src="{% static 'SVWNetColors.png' %}" alt="SVNet Image"> -->
+            <img src="{% static 'snlIntro.jpg' %}"
+                alt="SVNet Image">
         </div>
         <div id="allSortedImagesDiv"></div>
     </body>
+
     <script>
         function startSS() {
             console.log("Start SlideShow");
@@ -57,44 +68,39 @@
         document.getElementById("allImages").style.display = "none";
         let slides = document.getElementsByClassName("ss");
         let slidesArray = [];
+        // Get rid of the whitespace text nodes
         for (var i in slides) {
-            if (slides[i].nodeType == 1) { // get rid of the whitespace text nodes
+            if (slides[i].nodeType == 1) {
             console.log("Slide pre sort = " + slides[i].innerHTML);
                 slidesArray.push(slides[i]);
             }
         }
-        //slidesArray.sort(function(a, b) {
-        //    return a.innerHTML == b.innerHTML
-        //        ? 0
-        //        : (a.innerHTML > b.innerHTML ? 1 : -1);
-        //});
+
+        // Sort by alpha on Description field (elem [2])
         slidesArray.sort(function(a, b) {
-            // return a.children[2].innerHTML.trim() == b.children[2].innerHTML.trim()
-            //    ? 0
-            //    : (a.children[2].innerHTML.trim() > b.children[2].innerHTML.trim() ? 1 : -1);
             let aDesc = a.children[2].innerHTML.trim();
             let bDesc = b.children[2].innerHTML.trim();
             return aDesc == bDesc
                 ? 0
-                : (aDesc > bDesc ? 1 : -1);
+                // Ascending : (aDesc > bDesc ? 1 : -1);
+                : (aDesc < bDesc ? 1 : -1); // Descending
         });
 
         allSortedImages = document.getElementById("allSortedImagesDiv");
         for (i = 0; i < slidesArray.length; ++i) {
             console.log("Slide post sort = " + slidesArray[i].innerHTML);
             allSortedImages.appendChild(slidesArray[i]);
-            // allSortedImages.append(slidesArray[i]);
+            allSortedImages.style.display = "none";
         }
 
        (function slideLoop (i) {
             let element = document.getElementById("output");
-            element.innerHTML = slides[i-1].outerHTML;
-            let desc = slides[i-1].children[2].innerHTML.trim();
-            // element.style.display = "block"; //"none";
+            // Don't show index (description).
+            slides[i-1].children[2].style.display = "none";
+            element.innerHTML = slidesArray[i-1].outerHTML;
             unfade(element);
             setTimeout(() => {
                 fade(element);
-                // element.style.display = "none";
                 setTimeout(() => {
                     // decrement i and call myLoop again if i > 0
                     if (--i) slideLoop(i);
@@ -105,7 +111,7 @@
                 }, 2000);
             }, 3000);
 
-       })(slides.length);
+       })(slidesArray.length);
     }
 
     function fade(element) {
@@ -140,7 +146,7 @@
         var v = document.getElementsByTagName("audio")[0];
         v.load();
         v.play();
-        }, 5000 );
+        }, 100 );
         // let body = document.getElementsByTagName("BODY")[0];
         // body.prepend('<audio src="https://www.w3schools.com/tags/horse.ogg" controls></audio>');
     }
