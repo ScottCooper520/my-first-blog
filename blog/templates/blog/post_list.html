@@ -17,7 +17,8 @@
     <body>
         <audio webkit-playsinline="true"
             allow="autoplay"
-            autoplay="true">
+            <!-- autoplay="true"> -->
+            autoplay="false">
             <source id="audioSource" src=""></source>
         </audio>
         <div id="main" style="width:900px; height:550px">
@@ -73,7 +74,6 @@
             main.style.marginLeft = marginLeft + "px";
         })();
 
-        // function startSS(song) {
         function startSS(isHoliday) {
             console.log("Start SlideShow");
 
@@ -87,7 +87,7 @@
         if (isHoliday) {
             slidesHeader.innerHTML = "The Coops Holiday Update (2017-2019)";
             for (var i in slides) {
-                if (i != 0 && slides[i].children
+                if (slides[i].children
                     &&slides[i].children[2].innerHTML.trim() < 20) {
                     console.log("Slide pre sort = " + slides[i].innerHTML);
                     slidesArray.push(slides[i]);
@@ -97,14 +97,13 @@
         else {
             slidesHeader.innerHTML = "Scott & Lori 30th Anniversary (2019)";
             for (var i in slides) {
-                if (i != 0 && slides[i].children
+                if (slides[i].children
                     &&slides[i].children[2].innerHTML.trim() > 20) {
                         console.log("Slide pre sort = " + slides[i].innerHTML);
                         slidesArray.push(slides[i]);
                 }
             }
         }
-
 
         // Sort by alpha on Description field (elem [2])
         slidesArray.sort(function(a, b) {
@@ -123,39 +122,52 @@
             allSortedImages.style.display = "none";
         }
 
-       (function slideLoop (i) {
-            let element = document.getElementById("output");
-            // Don't show index (description).
-            slidesArray[i-1].children[2].style.display = "none";
-            element.innerHTML = slidesArray[i-1].outerHTML;
-            unfade(element);
-            setTimeout(() => {
-                fade(element);
-                setTimeout(() => {
-                    // decrement i and call myLoop again if i > 0
-                    if (--i) slideLoop(i);
-                    else {
-                        stopMusic();
-                        console.log("Slide Show Done");
-                        let output = document.getElementById("output");
-                        // Show title slide for bonus material.
-                        output.innerHTML = '<img src="{% static 'snlIntro.jpg' %}"' +
-                            'style="width:900px; height:550px;" alt="SNL Image">';
-                        output.style.display = "block";
-                        output.style.opacity = "1";
-                    }
-                }, 2000);
-            }, 13000);
+        let element = null;
+        // Initial call to slides function.
+        slideLoop(slidesArray.length);
 
-       })(slidesArray.length);
+        // Main loop. Decrements each pass.
+        function slideLoop(i) {
+            element = document.getElementById("output");
+            // Don't show index (description).
+            slidesArray[i - 1].children[2].style.display = "none";
+            element.innerHTML = slidesArray[i - 1].outerHTML;
+            unfade(element, unfadeCallback);
+        }
+
+        // This callback is run when unfade completes.
+        function unfadeCallback() {
+            // Set slide display time.
+            setTimeout(() => {
+                fade(element, fadeCallback);
+            }, 13000);
+        }
+
+        // This callback is run when fade completes.
+        function fadeCallback() {
+            element.style.display = 'none';
+            // decrement i and call myLoop again if i > 0
+            if (--i) slideLoop(i);
+            else {
+                stopMusic();
+                console.log("Slide Show Done");
+                let output = document.getElementById("output");
+                // Show title slide for bonus material.
+                output.innerHTML = '<img src="static/snlIntro.jpg"' +
+                    'style="width:900px; height:550px;" alt="SNL Image">';
+                output.style.display = "block";
+                output.style.opacity = "1";
+            }
+        }
     }
 
-    function fade(element) {
+    function fade(element, fadeCallback) {
     var op = 1;  // initial opacity
     var timer = setInterval(function () {
         if (op <= 0.1){
             clearInterval(timer);
-            element.style.display = 'none';
+            fadeCallback();
+            return;
         }
         element.style.opacity = op;
         element.style.filter = 'alpha(opacity=' + op * 100 + ")";
@@ -163,12 +175,13 @@
     }, 50); //50);
     }
 
-    function unfade(element) {
+    function unfade(element, unfadeCallback) {
     var op = 0.1;  // initial opacity
     element.style.display = 'block';
     var timer = setInterval(function () {
         if (op >= 1){
             clearInterval(timer);
+            unfadeCallback();
         }
         element.style.opacity = op;
         element.style.filter = 'alpha(opacity=' + op * 100 + ")";
@@ -202,7 +215,7 @@
             source.src = "/static/LinusLucy.mp3";
         }
         else {
-            // ok source.src = "/static/SiT2.mp3";
+            //source.src = "/static/SiT2.mp3";
         }
         setTimeout(() => {
         console.log("In playMusic()");
