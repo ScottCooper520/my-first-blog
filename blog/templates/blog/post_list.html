@@ -76,6 +76,7 @@
 
         function startSS(isHoliday) {
             console.log("Start SlideShow");
+            disableButtons();
 
         console.log("Here is some javascript...");
         playMusic(isHoliday);
@@ -87,8 +88,8 @@
         if (isHoliday) {
             slidesHeader.innerHTML = "The Coops Holiday Update (2017-2019)";
             for (var i in slides) {
-                if (slides[i].children
-                    &&slides[i].children[2].innerHTML.trim() < 20) {
+                if (slides[i].children &&
+                    slides[i].children[2].innerHTML.trim() < 20) {
                     console.log("Slide pre sort = " + slides[i].innerHTML);
                     slidesArray.push(slides[i]);
                 }
@@ -97,8 +98,8 @@
         else {
             slidesHeader.innerHTML = "Scott & Lori 30th Anniversary (2019)";
             for (var i in slides) {
-                if (slides[i].children
-                    &&slides[i].children[2].innerHTML.trim() > 20) {
+                if (slides[i].children &&
+                    slides[i].children[2].innerHTML.trim() > 20) {
                         console.log("Slide pre sort = " + slides[i].innerHTML);
                         slidesArray.push(slides[i]);
                 }
@@ -157,6 +158,7 @@
                     'style="width:900px; height:550px;" alt="SNL Image">';
                 output.style.display = "block";
                 output.style.opacity = "1";
+                enableButtons();
             }
         }
     }
@@ -172,7 +174,7 @@
         element.style.opacity = op;
         element.style.filter = 'alpha(opacity=' + op * 100 + ")";
         op -= op * 0.1;
-    }, 50); //50);
+    }, 50);
     }
 
     function unfade(element, unfadeCallback) {
@@ -186,7 +188,23 @@
         element.style.opacity = op;
         element.style.filter = 'alpha(opacity=' + op * 100 + ")";
         op += op * 0.1;
-    }, 50); //10);
+    }, 50);
+    }
+
+    function enableButtons() {
+        let buttons = document.getElementsByClassName("btn-info");
+        buttons[0].disabled = false;
+        buttons[0].style.opacity = "1";
+        buttons[1].disabled = false;
+        buttons[1].style.opacity = "1";
+    }
+
+    function disableButtons() {
+        let buttons = document.getElementsByClassName("btn-info");
+        buttons[0].disabled = true;
+        buttons[0].style.opacity = "0.2";
+        buttons[1].disabled = true;
+        buttons[1].style.opacity = "0.2";
     }
 
     function getWidth() {
@@ -215,7 +233,8 @@
             source.src = "/static/LinusLucy.mp3";
         }
         else {
-            //source.src = "/static/SiT2.mp3";
+            source.src = "/static/SiT2.mp3";
+            // source.src = "/static/LinusLucy.mp3";
         }
         setTimeout(() => {
         console.log("In playMusic()");
