@@ -40,14 +40,7 @@
                 <img src="/static/{{post.picture.url}}"
                     style="width:900px; height:550px">
             </p>
-            <!-- OK <p>
-                published: {{ post.published_date }}
-            </p> -->
-            <!-- <p>
-                created: {{ post.created_date }}
-            </p> -->
             <h3>
-                <!-- OK <a ref="">{{ post.title }} </a> -->
                 {{ post.title }}
             </h3>
             <p>
@@ -57,7 +50,7 @@
             {% endfor %}
         </div>
         <div id="output">
-            <img src="{% static 'Welcome.jpg' %}"
+            <img src="{% static 'christmasWelcome.jpg' %}"
                 style="width:900px; height:550px" alt="Welcome Image">
         </div>
         <div id="allSortedImagesDiv"></div>
@@ -76,6 +69,7 @@
 
         function startSS(isHoliday) {
             console.log("Start SlideShow");
+            // Prevent restart with active callbacks running.
             disableButtons();
 
         console.log("Here is some javascript...");
@@ -83,24 +77,27 @@
         document.getElementById("allImages").style.display = "none";
         let slides = document.getElementsByClassName("ss");
         let slidesArray = [];
+        let displayTime = 13000;
         // Split slides for holiday/bonus
         let slidesHeader = document.getElementsByTagName("h2")[0];
         if (isHoliday) {
             slidesHeader.innerHTML = "The Coops Holiday Update (2017-2019)";
+            displayTime = 11500; //12000;
             for (var i in slides) {
                 if (slides[i].children &&
                     slides[i].children[2].innerHTML.trim() < 20) {
-                    console.log("Slide pre sort = " + slides[i].innerHTML);
+                    console.log("Slide pre sort xmas = " + slides[i].innerHTML);
                     slidesArray.push(slides[i]);
                 }
             }
         }
         else {
             slidesHeader.innerHTML = "Scott & Lori 30th Anniversary (2019)";
+            displayTime = 12000;
             for (var i in slides) {
                 if (slides[i].children &&
                     slides[i].children[2].innerHTML.trim() > 20) {
-                        console.log("Slide pre sort = " + slides[i].innerHTML);
+                        console.log("Slide pre sort snl = " + slides[i].innerHTML);
                         slidesArray.push(slides[i]);
                 }
             }
@@ -108,8 +105,8 @@
 
         // Sort by alpha on Description field (elem [2])
         slidesArray.sort(function(a, b) {
-            let aDesc = a.children[2].innerHTML.trim();
-            let bDesc = b.children[2].innerHTML.trim();
+            let aDesc = parseInt(a.children[2].innerHTML.trim());
+            let bDesc = parseInt(b.children[2].innerHTML.trim());
             return aDesc == bDesc
                 ? 0
                 // Ascending : (aDesc > bDesc ? 1 : -1);
@@ -141,7 +138,7 @@
             // Set slide display time.
             setTimeout(() => {
                 fade(element, fadeCallback);
-            }, 13000);
+            }, displayTime);
         }
 
         // This callback is run when fade completes.
@@ -234,7 +231,7 @@
         }
         else {
             source.src = "/static/SiT2.mp3";
-            // source.src = "/static/LinusLucy.mp3";
+            //source.src = "/static/LinusLucy.mp3";
         }
         setTimeout(() => {
         console.log("In playMusic()");
